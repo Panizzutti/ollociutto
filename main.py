@@ -23,7 +23,7 @@ df["test"] = df["cases"].rolling(window=5,min_periods=1).mean()
 #print(df.columns,df.values)
 df.fillna(0)
 df = df.replace(np.nan, 0)
-print(df.describe())
+print(df.head(100))
 df1=df[:5]
 df1.plot("dateRep","test",kind = 'line')
 
