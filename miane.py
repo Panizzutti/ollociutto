@@ -4,8 +4,9 @@ import pandas as pd
 from pandas import ExcelFile
 
 df = pd.read_excel('covid.xlsx')
-a = df['dateRep'].unique()
 
-b = a['dateRep'].dt.strftime('%m/%d/%Y')
+c= df['dateRep'].drop_duplicates()
 
-print(sorted(a))
+print(c)
+
+df.to_csv()
