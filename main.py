@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 
 from pandas import ExcelFile
+
+
 df = pd.read_excel('covid.xlsx') # read xlsx diretto da eu
 df.fillna(0)
 pd.set_option("display.precision", 3)
