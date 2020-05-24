@@ -50,21 +50,26 @@ for n in range( df.shape[0]  ):
 
     casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
     morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
-    casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
-    morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
-    
+    casim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.cases)/(linea.popData2018)*1000000
+    mortim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.deaths)/(linea.popData2018)*1000000
+ 
     popolazioni.at[linea.countriesAndTerritories, "abitanti"] = linea.popData2018
 
-casi= casi.fillna(0)
-morti= morti.fillna(0)
 
-casim = casi.copy(deep=True)
-mortim = morti.copy(deep=True)
+casi = casi.fillna(0)
+morti = morti.fillna(0)
+casim = casim.fillna(0)
+mortim = mortim.fillna(0)
 
-casim = casim.apply(np.square)
+casimed = casim.copy(deep=True)
+mortimed = mortim.copy(deep=True)
 
+
+casimed = casim.rolling(window = 6, min_periods=1).mean()
+mortimed = mortim.rolling(window = 6, min_periods=1 ).mean()
+
+casimed.to_csv('casimed.csv', index=True, index_label="DATE")
 casim.to_csv('casim.csv', index=True, index_label="DATE")
-
 
 
 
