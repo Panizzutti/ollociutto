@@ -66,8 +66,8 @@ casimed = casim.copy(deep=True)
 mortimed = mortim.copy(deep=True)
 
 
-casimed = casim.rolling(window = 6, min_periods=1).mean().round(2)
-mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(2)
+casimed = casim.rolling(window = 6, min_periods=1).mean().round(1)
+mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(1)
 
 
 
