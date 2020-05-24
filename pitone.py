@@ -1,9 +1,16 @@
 import numpy as np
 import pandas as pd
-
+import os
 
 from pandas import ExcelFile
 
+
+def toglilinea(filename):
+    with open(filename, 'rb+') as f:
+        f.seek(-1, os.SEEK_END)
+        if(f.readline() == b'\n'):
+                f.seek(-1, os.SEEK_END)
+                f.truncate()
 
 df = pd.read_excel('covid.xlsx')
 
@@ -74,4 +81,10 @@ casimed.to_csv('grapheu.csv', index=True, index_label="DATE", date_format="%d/%m
 mortimed.to_csv('graphdeu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
 casimed.to_csv('graphus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
 mortimed.to_csv('graphdus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
+
+toglilinea("grapheu.csv")
+toglilinea("graphdeu.csv")
+toglilinea("graphus.csv")
+toglilinea("graphdus.csv")
+
 
