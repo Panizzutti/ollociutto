@@ -2,9 +2,15 @@ import numpy as np
 import pandas as pd
 import os
 
-
 from pandas import ExcelFile
 
+
+def toglilinea(filename):
+    with open(filename, 'rb+') as f:
+        f.seek(-1, os.SEEK_END)
+        if(f.readline() == b'\n'):
+                f.seek(-1, os.SEEK_END)
+                f.truncate()
 
 df = pd.read_excel('covid.xlsx')
 
@@ -65,22 +71,18 @@ casimed = casim.copy(deep=True)
 mortimed = mortim.copy(deep=True)
 
 
-casimed = casim.rolling(window = 6, min_periods=1).mean().round(2)
-mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(2)
+casimed = casim.rolling(window = 6, min_periods=1).mean().round(1)
+mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(1)
 
 
-casimed.to_csv("graph.csv", index=True, index_label="DATE",date_format="%m/%d/%Y")
-mortimed.to_csv('graphd.csv', index=True, index_label="DATE")
-def removelat(filename):
-    with open(filename, 'rb+') as f:
-        f.seek(-1, os.SEEK_END)
-        if(f.readline() == b'\n'):
-                f.seek(-1, os.SEEK_END)
-                f.truncate()
-removelat("graph.csv")
-#casim.to_csv('casim.csv', index=True, index_label="DATE")
+casimed.to_csv('grapheu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
+mortimed.to_csv('graphdeu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
+casimed.to_csv('graphus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
+mortimed.to_csv('graphdus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
 
-#popolazioni.to_csv('popola.csv', index=True)
+toglilinea("grapheu.csv")
+toglilinea("graphdeu.csv")
+toglilinea("graphus.csv")
+toglilinea("graphdus.csv")
 
-#casi.to_csv('casi.csv', index=True, index_label="DATE")
-#morti.to_csv('morti.csv', index=True, index_label="DATE")
+
