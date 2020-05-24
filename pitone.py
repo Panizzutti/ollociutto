@@ -65,7 +65,8 @@ mortim = morti.copy(deep=True)
 
 #analise the whole xlsx file, line by line and fill graphs
 for n in range( df.shape[0]  ):
-    linea = df.iloc[n] #get the nth line 
+     #get the nth line 
+    linea = df.iloc[n]
 
     #put values from linea in right place
     casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
@@ -74,6 +75,7 @@ for n in range( df.shape[0]  ):
     mortim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.deaths)/(linea.popData2018)*1000000
     #put population values
     popolazioni.at[linea.countriesAndTerritories, "abitanti"] = linea.popData2018
+
 
 #fill empty cells with 0s
 casi = casi.fillna(0)
@@ -89,15 +91,11 @@ casimed = casim.rolling(window = 6, min_periods=1).mean().round(1)
 mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(1)
 
 #create csv files
-casimed.to_csv('grapheu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
-mortimed.to_csv('graphdeu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
-casimed.to_csv('graphus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
-mortimed.to_csv('graphdus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
+casimed.to_csv('graph.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
+mortimed.to_csv('graphd.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
 
 #remove extra line that pandas creates in conversion to csv
-toglilinea("grapheu.csv")
-toglilinea("graphdeu.csv")
-toglilinea("graphus.csv")
-toglilinea("graphdus.csv")
+toglilinea("graph.csv")
+toglilinea("graphd.csv")
 
 
