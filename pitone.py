@@ -42,11 +42,6 @@ date = pd.concat([date,pd.DataFrame(columns=countries)])
 
 casi = date.copy(deep=True)
 morti = date.copy(deep=True)
-=======
-casi = date
-morti = date
-print(date)
->>>>>>> Stashed changes
 
 casim = casi.copy(deep=True)
 mortim = morti.copy(deep=True)
