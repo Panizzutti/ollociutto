@@ -26,28 +26,56 @@ date = pd.to_datetime(date).sort_values().to_frame().rename(columns={"dateRep": 
 
 listadate = date["DATE"]
 
-date = date.set_index("DATE")
+date = date.set_index('DATE')
 date.index.name = "DATE"
 
 countries = df['countriesAndTerritories'].drop_duplicates()
 
+popolazioni= countries.copy(deep=True).to_frame()
+popolazioni = popolazioni.set_index('countriesAndTerritories')
+popolazioni["abitanti"] = ""
+
+
 date = pd.concat([date,pd.DataFrame(columns=countries)])
 
-date.to_csv('date.csv', index=True)
 
 casi = date.copy(deep=True)
 morti = date.copy(deep=True)
+
+casim = casi.copy(deep=True)
+mortim = morti.copy(deep=True)
 
 for n in range( df.shape[0]  ):
     linea = df.iloc[n]
 
     casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
     morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
+    casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
+    morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
+    
+    popolazioni.at[linea.countriesAndTerritories, "abitanti"] = linea.popData2018
+
+casi= casi.fillna(0)
+morti= morti.fillna(0)
+
+casim = casi.copy(deep=True)
+mortim = morti.copy(deep=True)
+
+casim = casim.apply(np.square)
+
+casim.to_csv('casim.csv', index=True, index_label="DATE")
 
 
 
-casi.to_csv('casi.csv', index=True)
-morti.to_csv('morti.csv', index=False)
+
+
+
+#popolazioni.to_csv('popola.csv', index=True)
+
+#casi.to_csv('casi.csv', index=True, index_label="DATE")
+#morti.to_csv('morti.csv', index=True, index_label="DATE")
+
+
 
 
 
