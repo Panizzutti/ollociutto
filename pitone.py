@@ -37,8 +37,6 @@ popolazioni["abitanti"] = ""
 
 
 date = pd.concat([date,pd.DataFrame(columns=countries)])
-<<<<<<< Updated upstream
-
 
 casi = date.copy(deep=True)
 morti = date.copy(deep=True)
@@ -48,7 +46,6 @@ mortim = morti.copy(deep=True)
 
 for n in range( df.shape[0]  ):
     linea = df.iloc[n]
-    print(date)
     casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
     morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
     casim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.cases)/(linea.popData2018)*1000000
@@ -69,7 +66,7 @@ mortimed = mortim.copy(deep=True)
 casimed = casim.rolling(window = 6, min_periods=1).mean()
 mortimed = mortim.rolling(window = 6, min_periods=1 ).mean()
 
-casimed.to_csv('casimed.csv', index=True, index_label="DATE")
+casimed.to_csv('graph.csv', index=True, index_label="DATE")
 casim.to_csv('casim.csv', index=True, index_label="DATE")
 
 
