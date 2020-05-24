@@ -27,14 +27,16 @@ date = pd.to_datetime(date).sort_values().to_frame().rename(columns={"dateRep": 
 listadate = date["DATE"]
 
 date = date.set_index("DATE")
-#date.to_csv('date.csv',index=False)
+date.index.name = "DATE"
 
 countries = df['countriesAndTerritories'].drop_duplicates()
 
-#countries.to_csv('cane.csv', index=False)
 date = pd.concat([date,pd.DataFrame(columns=countries)])
-casi = date
-morti = date
+
+date.to_csv('date.csv', index=True)
+
+casi = date.copy(deep=True)
+morti = date.copy(deep=True)
 
 for n in range( df.shape[0]  ):
     linea = df.iloc[n]
@@ -43,8 +45,12 @@ for n in range( df.shape[0]  ):
     morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
 
 
-date.to_csv('date.csv', index=False)
+
 casi.to_csv('casi.csv', index=True)
 morti.to_csv('morti.csv', index=False)
+
+
+
+
 
 
