@@ -70,8 +70,8 @@ mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(2)
 
 casimed.to_csv('casimed.csv', index=True, index_label="DATE")
 casim.to_csv('casim.csv', index=True, index_label="DATE")
->>>>>>> parent of 95bea3b... Merge branch 'dio'
->>>>>>> Stashed changes
+
+
 
 casimed.to_csv("graph.csv", index=True, index_label="DATE",date_format="%m/%d/%Y")
 mortimed.to_csv('graphd.csv', index=True, index_label="DATE")
