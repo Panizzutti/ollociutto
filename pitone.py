@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 
 
 from pandas import ExcelFile
@@ -68,10 +69,15 @@ casimed = casim.rolling(window = 6, min_periods=1).mean().round(2)
 mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(2)
 
 
-
-casimed.to_csv('graph.csv', index=True, index_label="DATE")
+casimed.to_csv("graph.csv", index=True, index_label="DATE",date_format="%m/%d/%Y")
 mortimed.to_csv('graphd.csv', index=True, index_label="DATE")
+with open("graph.csv", 'rb+') as f:
+    f.seek(-1, os.SEEK_END)
+    f.truncate()
 
+with open("graphd.csv", 'rb+') as f:
+    f.seek(-1, os.SEEK_END)
+    f.truncate()
 
 
 
