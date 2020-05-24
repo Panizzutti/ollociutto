@@ -70,7 +70,6 @@ casimed = casim.rolling(window = 6, min_periods=1).mean().round(1)
 mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(1)
 
 
-
 casimed.to_csv('grapheu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
 mortimed.to_csv('graphdeu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
 casimed.to_csv('graphus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
