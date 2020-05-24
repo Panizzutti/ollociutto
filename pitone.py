@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 from pandas import ExcelFile
 
 
@@ -63,25 +64,20 @@ casimed = casim.copy(deep=True)
 mortimed = mortim.copy(deep=True)
 
 
-casimed = casim.rolling(window = 6, min_periods=1).mean()
-mortimed = mortim.rolling(window = 6, min_periods=1 ).mean()
+casimed = casim.rolling(window = 6, min_periods=1).mean().round(2)
+mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(2)
+
+
 
 casimed.to_csv('graph.csv', index=True, index_label="DATE")
-casim.to_csv('casim.csv', index=True, index_label="DATE")
+mortimed.to_csv('graphd.csv', index=True, index_label="DATE")
 
 
 
 
+#casim.to_csv('casim.csv', index=True, index_label="DATE")
 
 #popolazioni.to_csv('popola.csv', index=True)
 
 #casi.to_csv('casi.csv', index=True, index_label="DATE")
 #morti.to_csv('morti.csv', index=True, index_label="DATE")
-
-
-
-
-
-
-
-
