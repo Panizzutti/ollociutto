@@ -77,7 +77,7 @@ def removelat(filename):
         print(f.readline(),f.read())
         f.truncate()
 
-
+removelat("")
 #casim.to_csv('casim.csv', index=True, index_label="DATE")
 
 #popolazioni.to_csv('popola.csv', index=True)
