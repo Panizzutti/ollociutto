@@ -75,11 +75,3 @@ mortimed.to_csv('graphdeu.csv', index=True, index_label="DATE", date_format="%d/
 casimed.to_csv('graphus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
 mortimed.to_csv('graphdus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
 
-
-
-#casim.to_csv('casim.csv', index=True, index_label="DATE")
-
-#popolazioni.to_csv('popola.csv', index=True)
-
-#casi.to_csv('casi.csv', index=True, index_label="DATE")
-#morti.to_csv('morti.csv', index=True, index_label="DATE")
