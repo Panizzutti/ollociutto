@@ -18,10 +18,21 @@ df = df.loc[~((df['countriesAndTerritories'] == 'Anguilla')
             | (df['countriesAndTerritories'] == '')
             ),:]
 
+df = df.reset_index(drop= True )
+
 date = df['dateRep'].drop_duplicates()
-date = pd.to_datetime(date)
-date = date.sort_values().to_frame()
-date =date.reset_index(drop=True)
-date.rename(columns={"dateRep": "DATE"})
-print(date)
-date.to_csv('date.csv',index=False,)
+date = pd.to_datetime(date).sort_values().to_frame().rename(columns={"dateRep": "DATE"})
+
+#date.to_csv('date.csv',index=False)
+
+countries = df['countriesAndTerritories'].drop_duplicates()
+
+#countries.to_csv('cane.csv', index=False)
+
+
+for n in range( df.shape[0]  ): 
+    print(countries)
+    
+
+
+
