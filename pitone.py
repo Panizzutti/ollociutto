@@ -20,8 +20,8 @@ df = df.loc[~((df['countriesAndTerritories'] == 'Anguilla')
 
 date = df['dateRep'].drop_duplicates()
 date = pd.to_datetime(date)
-date = date.sort_values()
-
+date = date.sort_values().to_frame()
+date =date.reset_index(drop=True)
 date.rename(columns={"dateRep": "DATE"})
-
+print(date)
 date.to_csv('date.csv',index=False,)
