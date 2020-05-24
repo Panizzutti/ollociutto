@@ -71,9 +71,10 @@ mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(1)
 
 
 
-casimed.to_csv('graph.csv', index=True, index_label="DATE")
-mortimed.to_csv('graphd.csv', index=True, index_label="DATE")
-
+casimed.to_csv('grapheu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
+mortimed.to_csv('graphdeu.csv', index=True, index_label="DATE", date_format="%d/%m/%Y")
+casimed.to_csv('graphus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
+mortimed.to_csv('graphdus.csv', index=True, index_label="DATE", date_format="%m/%d/%Y")
 
 
 
