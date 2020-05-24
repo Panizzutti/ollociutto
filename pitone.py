@@ -68,16 +68,16 @@ mortimed = mortim.copy(deep=True)
 casimed = casim.rolling(window = 6, min_periods=1).mean().round(2)
 mortimed = mortim.rolling(window = 6, min_periods=1 ).mean().round(2)
 
-casimed.to_csv('casimed.csv', index=True, index_label="DATE")
-casim.to_csv('casim.csv', index=True, index_label="DATE")
 
+casimed.to_csv("graph.csv", index=True, index_label="DATE",date_format="%m/%d/%Y")
+mortimed.to_csv('graphd.csv', index=True, index_label="DATE")
 def removelat(filename):
     with open(filename, 'rb+') as f:
         f.seek(-1, os.SEEK_END)
-        print(f.readline(),f.read())
-        f.truncate()
-
-removelat("")
+        if(f.readline() == b'\n'):
+                f.seek(-1, os.SEEK_END)
+                f.truncate()
+removelat("graph.csv")
 #casim.to_csv('casim.csv', index=True, index_label="DATE")
 
 #popolazioni.to_csv('popola.csv', index=True)
