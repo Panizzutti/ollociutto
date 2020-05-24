@@ -37,17 +37,23 @@ popolazioni["abitanti"] = ""
 
 
 date = pd.concat([date,pd.DataFrame(columns=countries)])
+<<<<<<< Updated upstream
 
 
 casi = date.copy(deep=True)
 morti = date.copy(deep=True)
+=======
+casi = date
+morti = date
+print(date)
+>>>>>>> Stashed changes
 
 casim = casi.copy(deep=True)
 mortim = morti.copy(deep=True)
 
 for n in range( df.shape[0]  ):
     linea = df.iloc[n]
-
+    print(date)
     casi.at[ linea.dateRep, linea.countriesAndTerritories] = linea.cases
     morti.at[ linea.dateRep, linea.countriesAndTerritories] = linea.deaths
     casim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.cases)/(linea.popData2018)*1000000
