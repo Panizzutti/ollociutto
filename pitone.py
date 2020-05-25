@@ -4,6 +4,13 @@ import os
 
 from pandas import ExcelFile
 
+
+
+#sum each colum
+def totale(df, riga):
+    for column in df:
+        informazioni.at[riga, column]= df[column].sum()
+
 #remove \n to last line 
 def toglilinea(filename):
     with open(filename, 'rb+') as f:
@@ -27,10 +34,10 @@ df = df.loc[~((df['countriesAndTerritories'] == 'Anguilla')
             | (df['countriesAndTerritories'] == 'British_Virgin_Islands')
             | (df['countriesAndTerritories'] == 'Saint_Kitts_and_Nevis')
             | (df['countriesAndTerritories'] == '')
-            | (df['countriesAndTerritories'] == '')
-            | (df['countriesAndTerritories'] == '')
-            | (df['countriesAndTerritories'] == '')
-            | (df['countriesAndTerritories'] == '')
+#            | (df['countriesAndTerritories'] == '')
+#            | (df['countriesAndTerritories'] == '')
+#            | (df['countriesAndTerritories'] == '')
+#            | (df['countriesAndTerritories'] == '')
             ),:]
 
 df = df.reset_index(drop= True )
@@ -48,10 +55,32 @@ date = date.set_index('DATE')
 #create a list of the wanted countries
 countries = df['countriesAndTerritories'].drop_duplicates()
 
-#create a df of the populations
-popolazioni= countries.copy(deep=True).to_frame()
-popolazioni = popolazioni.set_index('countriesAndTerritories')
-popolazioni["abitanti"] = ""
+#create a df of countries infos
+informazioni= countries.copy(deep=True).to_frame()
+informazioni = informazioni.set_index('countriesAndTerritories')
+informazioni["popolazione"] = ""
+informazioni["casitot"] = ""
+informazioni["mortitot"] = ""
+informazioni["casimed"] = ""
+informazioni["mortimed"] = ""
+informazioni["rankpopolazione"] = ""
+informazioni["rankcasimed"] = ""
+informazioni["rankmortimed"] = ""
+informazioni["rankcasitot"] = ""
+informazioni["rankmortitot"] = ""
+informazioni["punteggiocasi"] = ""
+informazioni["punteggiomorti"] = ""
+informazioni["rankpunteggiocasi"] = ""
+informazioni["rankpunteggiomorti"] = ""
+#informazioni[""] = ""
+
+informazioni= informazioni.transpose()
+
+#get the rank
+def rankinator(riga):
+    informazioni.loc['rank' + riga, : ] = informazioni.loc[riga,:].rank(method='max', ascending=False)
+
+
 
 #pre format the dataframe to host the datas
 date = pd.concat([date,pd.DataFrame(columns=countries)])
@@ -74,7 +103,8 @@ for n in range( df.shape[0]  ):
     casim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.cases)/(linea.popData2018)*1000000
     mortim.at[ linea.dateRep, linea.countriesAndTerritories] = (linea.deaths)/(linea.popData2018)*1000000
     #put population values
-    popolazioni.at[linea.countriesAndTerritories, "abitanti"] = linea.popData2018
+    informazioni.at["popolazione", linea.countriesAndTerritories] = linea.popData2018
+
 
 
 #fill empty cells with 0s
@@ -82,6 +112,11 @@ casi = casi.fillna(0)
 morti = morti.fillna(0)
 casim = casim.fillna(0)
 mortim = mortim.fillna(0)
+
+#sum casitot and casimed
+totale(casi, "casitot")
+totale(morti, "mortitot")
+
 
 casimed = casim.copy(deep=True)
 mortimed = mortim.copy(deep=True)
@@ -97,5 +132,29 @@ mortimed.to_csv('graphd.csv', index=True, index_label="DATE", date_format="%d/%m
 #remove extra line that pandas creates in conversion to csv
 toglilinea("graph.csv")
 toglilinea("graphd.csv")
+
+informazioni.loc["casimed",:] = casimed.iloc[-1, :]
+informazioni.loc["mortimed",:] = mortimed.iloc[-1, :]
+
+informazioni.loc["punteggiocasi",:] = (sum(
+                                       informazioni.loc["rankcasitot", :],
+                                       informazioni.loc["rankcasimed", :],
+                                       informazioni.loc["rankpopolazione", :])) 
+
+
+
+rankinator("casitot")
+rankinator("mortitot")
+rankinator("popolazione")
+rankinator("casimed")
+rankinator("mortimed")
+#rankinator("punteggiocasi")
+#rankinator("punteggiomorti")
+
+informazioni.to_csv('info.csv', index=True)
+
+
+
+
 
 
