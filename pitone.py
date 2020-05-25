@@ -135,10 +135,6 @@ toglilinea("graphd.csv")
 informazioni.loc["casimed",:] = casimed.iloc[-1, :]
 informazioni.loc["mortimed",:] = mortimed.iloc[-1, :]
 
-informazioni.loc["punteggiocasi",:] = (sum(
-                                       informazioni.loc["rankcasitot", :],
-                                       informazioni.loc["rankcasimed", :],
-                                       informazioni.loc["rankpopolazione", :])) 
 
 
 
@@ -149,6 +145,15 @@ rankinator("casimed")
 rankinator("mortimed")
 #rankinator("punteggiocasi")
 #rankinator("punteggiomorti")
+print(informazioni.head())
+def somma():
+    somma=[]
+    for i in informazioni.columns:
+        somma.append(informazioni[i].rankcasitot + informazioni[i].rankcasimed + informazioni[i].rankpopolazione)
+    informazioni.loc["punteggiocasi"]=somma
+    print(informazioni)
+    
+somma()
 
 informazioni.to_csv('info.csv', index=True)
 
