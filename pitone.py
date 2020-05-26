@@ -82,8 +82,8 @@ informazioni["tendenzamorti"] = ""
 informazioni= informazioni.transpose()
 
 #get the rank
-def rankinator(riga, ascending):
-    informazioni.loc['rank' + riga] = informazioni.loc[riga,:].rank(method='max', ascending=ascending)
+def rankinator(riga, ascending, pct):
+    informazioni.loc['rank' + riga] = informazioni.loc[riga].rank(method='dense', ascending=ascending, pct=pct)
 
 #calculate a ponderate score for each country
 def punteggio(argomento):
@@ -175,19 +175,19 @@ informazioni.loc["mortimed"] = mortimed.iloc[-1]
 
 
 #get the rank of each category in each country
-rankinator("casitot", False)
-rankinator("mortitot", False)
-rankinator("popolazione", False)
-rankinator("casimed", False)
-rankinator("mortimed", False)
+rankinator("casitot", False, True)
+rankinator("mortitot", False, True)
+rankinator("popolazione", False, True)
+rankinator("casimed", False, True)
+rankinator("mortimed", False, True)
 
 #get countries deaths and cases scores
 punteggio("casi")
 punteggio("morti")
 
 #get final ranks
-rankinator("punteggiocasi", True)
-rankinator("punteggiomorti", True)
+rankinator("punteggiocasi", True, False)
+rankinator("punteggiomorti", True, False)
 
 tendenzieitor(casimed, "casi")
 tendenzieitor(mortimed, "morti")
@@ -197,24 +197,39 @@ mortiglobalitotali= morti.sum()
 
 
 
-informazioni.to_csv('info.csv', index=True)
-
 casifinale= pd.DataFrame()
-mortifinale= casifinale.copy(deep=True)
+mortifinale= pd.DataFrame()
 
-casifinale= pd.concat([informazioni.loc["rankpunteggiocasi"].reset_index(),
-                       countries,
-                       informazioni.loc["casimed"].reset_index(),
-                       informazioni.loc["tendenzacasi"].reset_index(),
-                       casi.iloc[-1].reset_index(),
-                       informazioni.loc["casitot"].reset_index(),
-                       ], axis=1)
 
-#casifinale.columns = (['Rank', 'Country',	'CaseM',	'Tendenza',	'CaseNew',	'Casitot'])
+casifinale= pd.concat([informazioni.loc["rankpunteggiocasi"],
+                       informazioni.columns.to_series(),
+                       informazioni.loc["casimed"],
+                       informazioni.loc["tendenzacasi"],
+                       casi.iloc[-1],
+                       informazioni.loc["casitot"]
+                       ], axis=1) 
 
-print(casifinale)
-casifinale.to_csv("casifinale.csv", index=True)
 
+mortifinale= pd.concat([informazioni.loc["rankpunteggiomorti"],
+                       informazioni.columns.to_series(),
+                       informazioni.loc["mortimed"],
+                       informazioni.loc["tendenzamorti"],
+                       morti.iloc[-1],
+                       informazioni.loc["mortitot"]
+                       ], axis=1) 
+
+
+
+casifinale.columns = ['Rank', 'Country',	'CaseM',	'Tendenza',	'CaseNew',	'Casitot']
+mortifinale.columns = ['Rank', 'Country',	'CaseM',	'Tendenza',	'CaseNew',	'Casitot']
+
+casifinale= casifinale.sort_values('Rank')
+mortifinale= mortifinale.sort_values('Rank')
+
+
+casifinale.to_csv("rank.csv", index=False)
+
+mortifinale.to_csv("rankd.csv", index=False)
 
 #ciccio = pd.Series()
 #ciccio= informazioni.loc['rankcasitot','rankcasimed','rankpopolazione'].sum()
