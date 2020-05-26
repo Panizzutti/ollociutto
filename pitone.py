@@ -7,9 +7,11 @@ from pandas import ExcelFile
 
 
 #sum each colum
-def totale(df, riga):
+""" def totale(df, riga):
     for column in df:
-        informazioni.at[riga, column]= df[column].sum()
+        informazioni.at[riga, column]= df[column].sum() """
+""" def totale(df, riga):
+    informazioni.loc[riga]= df.sum() """
 
 #remove \n to last line 
 def toglilinea(filename):
@@ -53,7 +55,8 @@ listadate = date["DATE"]
 date = date.set_index('DATE')
 
 #create a list of the wanted countries
-countries = df['countriesAndTerritories'].drop_duplicates()
+countries = df['countriesAndTerritories'].drop_duplicates().reset_index(drop=True)
+
 
 #create a df of countries infos
 informazioni= countries.copy(deep=True).to_frame()
@@ -80,7 +83,7 @@ informazioni= informazioni.transpose()
 
 #get the rank
 def rankinator(riga, ascending):
-    informazioni.loc['rank' + riga, : ] = informazioni.loc[riga,:].rank(method='max', ascending=ascending)
+    informazioni.loc['rank' + riga] = informazioni.loc[riga,:].rank(method='max', ascending=ascending)
 
 #calculate a ponderate score for each country
 def punteggio(argomento):
@@ -120,6 +123,7 @@ def tendenzieitor(argomento, inforiga):
 date = pd.concat([date,pd.DataFrame(columns=countries)])
 
 
+
 casi = date.copy(deep=True)
 morti = date.copy(deep=True)
 
@@ -148,9 +152,8 @@ casim = casim.fillna(0)
 mortim = mortim.fillna(0)
 
 #sum casitot and casimed
-totale(casi, "casitot")
-totale(morti, "mortitot")
-
+informazioni.loc["casitot"]= casi.sum()
+informazioni.loc["mortitot"]= morti.sum()
 
 casimed = casim.copy(deep=True)
 mortimed = mortim.copy(deep=True)
@@ -189,12 +192,31 @@ rankinator("punteggiomorti", True)
 tendenzieitor(casimed, "casi")
 tendenzieitor(mortimed, "morti")
 
+casiglobalitotali= casi.sum()
+mortiglobalitotali= morti.sum()
+
 
 
 informazioni.to_csv('info.csv', index=True)
 
+casifinale= pd.DataFrame()
+mortifinale= casifinale.copy(deep=True)
+
+casifinale= pd.concat([informazioni.loc["rankpunteggiocasi"].reset_index(),
+                       countries,
+                       informazioni.loc["casimed"].reset_index(),
+                       informazioni.loc["tendenzacasi"].reset_index(),
+                       casi.iloc[-1].reset_index(),
+                       informazioni.loc["casitot"].reset_index(),
+                       ], axis=1)
+
+#casifinale.columns = (['Rank', 'Country',	'CaseM',	'Tendenza',	'CaseNew',	'Casitot'])
+
+print(casifinale)
+casifinale.to_csv("casifinale.csv", index=True)
 
 
-
-
-
+#ciccio = pd.Series()
+#ciccio= informazioni.loc['rankcasitot','rankcasimed','rankpopolazione'].sum()
+#print(ciccio)
+#ciccio.to_csv("ciccio.csv")
