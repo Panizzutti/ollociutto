@@ -72,14 +72,48 @@ informazioni["punteggiocasi"] = ""
 informazioni["punteggiomorti"] = ""
 informazioni["rankpunteggiocasi"] = ""
 informazioni["rankpunteggiomorti"] = ""
+informazioni["tendenzacasi"] = ""
+informazioni["tendenzamorti"] = ""
 #informazioni[""] = ""
 
 informazioni= informazioni.transpose()
 
 #get the rank
-def rankinator(riga):
-    informazioni.loc['rank' + riga, : ] = informazioni.loc[riga,:].rank(method='max', ascending=False)
+def rankinator(riga, ascending):
+    informazioni.loc['rank' + riga, : ] = informazioni.loc[riga,:].rank(method='max', ascending=ascending)
 
+#calculate a ponderate score for each country
+def punteggio(argomento):
+    somma=[]
+    for column in informazioni.columns:
+        somma.append(informazioni.at[ "rank"+argomento+"med" ,column] + 
+                     informazioni.at[ "rank"+argomento+"med" ,column] + 
+                     informazioni.at[ "rank"+argomento+"med" ,column] + 
+                     informazioni.at[ "rank"+argomento+"tot" ,column] + 
+                     informazioni.at[ "rank"+argomento+"tot" ,column] +
+                     informazioni.at[ "rankpopolazione" ,column] )
+    informazioni.loc["punteggio"+argomento]=somma
+
+
+#calculate trend
+def tendenzieitor(argomento, inforiga):
+    tendenze = [] 
+    for i in range(argomento.shape[1]):
+        valoriora = float((argomento.iat[-1, i] +
+                        argomento.iat[-2, i])/2 )
+        valoriprima = float((argomento.iat[-3, i] +
+                        argomento.iat[-4, i])/2)
+        valdiff = valoriora - valoriprima
+        confidence = (((valoriora + valoriprima)/2)*0.02)
+
+        if(valdiff< -confidence):
+            tendenze.append(0)
+        elif(valdiff> confidence):
+            tendenze.append(2)
+        else:
+            tendenze.append(1)
+
+    informazioni.loc["tendenza"+inforiga]= tendenze
 
 
 #pre format the dataframe to host the datas
@@ -133,23 +167,29 @@ mortimed.to_csv('graphd.csv', index=True, index_label="DATE", date_format="%d/%m
 toglilinea("graph.csv")
 toglilinea("graphd.csv")
 
-informazioni.loc["casimed",:] = casimed.iloc[-1, :]
-informazioni.loc["mortimed",:] = mortimed.iloc[-1, :]
-
-informazioni.loc["punteggiocasi",:] = (sum(
-                                       informazioni.loc["rankcasitot", :],
-                                       informazioni.loc["rankcasimed", :],
-                                       informazioni.loc["rankpopolazione", :])) 
+informazioni.loc["casimed"] = casimed.iloc[-1]
+informazioni.loc["mortimed"] = mortimed.iloc[-1]
 
 
+#get the rank of each category in each country
+rankinator("casitot", False)
+rankinator("mortitot", False)
+rankinator("popolazione", False)
+rankinator("casimed", False)
+rankinator("mortimed", False)
 
-rankinator("casitot")
-rankinator("mortitot")
-rankinator("popolazione")
-rankinator("casimed")
-rankinator("mortimed")
-#rankinator("punteggiocasi")
-#rankinator("punteggiomorti")
+#get countries deaths and cases scores
+punteggio("casi")
+punteggio("morti")
+
+#get final ranks
+rankinator("punteggiocasi", True)
+rankinator("punteggiomorti", True)
+
+tendenzieitor(casimed, "casi")
+tendenzieitor(mortimed, "morti")
+
+
 
 informazioni.to_csv('info.csv', index=True)
 
