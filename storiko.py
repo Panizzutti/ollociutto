@@ -231,7 +231,6 @@ for z in datess:
     casifinale= casifinale.sort_values('Rank')
     mortifinale= mortifinale.sort_values('Rank')
 
-    informazioni.to_csv("info.csv")
     casifinale.to_csv("storico/rank-"+str(z.date())+".csv", index=False)
 
     mortifinale.to_csv("storico/rankd-"+str(z.date())+".csv", index=False)
